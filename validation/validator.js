@@ -12,20 +12,21 @@ const validateInputs = (req, next) => {
     const err = new ErrorHandler(400, "Please fill the credentials");
     return next(err);
   }
+   
 
   if(!isValidLength ){
-     return next(
-       new ErrorHandler(400, "Username must be a valid.")
+     return next(new ErrorHandler(400, "Username must be a valid.")
      );
   }
+ 
 
-if (!isValidEmail && !isValidPhoneNumber) {
+   if (!isValidEmail && !isValidPhoneNumber) {
   return next(
     new ErrorHandler(400, "Username must be a valid email or phone number.")
   );
 }
 
-  if (password && password.length < 3){
+  if(password && password.length < 3){
          const err = new ErrorHandler(400, "Invalid password");
          return next(err);
   }
