@@ -5,13 +5,7 @@ const validateInputs = require("../validation/validator")
 const loginController=async(req,res,next)=>{
     try {
         const{username,password}=req.body
-        
 
-        // if(!validateInputs(req,next)){
-        //      const err = new ErrorHandler(400, "Validation Failed");
-        //      return next(err);
-        // }
-        
         const newUser=await User.create({username,password})
 
         res.status(200).json({
