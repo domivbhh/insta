@@ -1,8 +1,11 @@
 const express=require('express')
-const loginController = require('../controllers/userController')
+const { PostData, GetData } = require('../controllers/userController')
+// const loginController = require('../controllers/userController')
+// const PostData = require('../controllers/userController')
 
 const userRouter=express.Router()
 
-userRouter.post('/profile',loginController)
+userRouter.post('/post',PostData)
+userRouter.get('/get',GetData)
 
 module.exports=userRouter
