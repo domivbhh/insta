@@ -13,9 +13,9 @@ const PostData=async(req,res,next)=>{
 
       const newData=req.body
 
-      const writeData = (data) => {
-        fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
-      };
+      // const writeData = (data) => {
+      //   fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
+      // };
 
       const readData = () => {
         try {
@@ -31,15 +31,18 @@ const PostData=async(req,res,next)=>{
 
       existingData.push(newData);
 
-      writeData(existingData);
+      // writeData(existingData);
 
-      const datas=User.create({username,password})
+      //new
+      const datas=new User.create({username,password})
       await datas.save()
       
 
       res.status(200).json({
         status: "success",
         message: "user login success",
+        //new
+        mongo:datas
       });
     } 
     catch (error) {
@@ -58,12 +61,15 @@ const GetData=async(req,res,next)=>{
         return [];
       }
     };
-
-       const existingData = readData();
+    const existingData = readData();
+    //new
+       const mongo=await User.find()
 
        res.status(200).json({
          status: "success",
-         data:existingData
+         data:existingData,
+         //new
+         mongos:mongo
        });
 
 
