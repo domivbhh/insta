@@ -14,7 +14,8 @@ const PostData=async(req,res,next)=>{
       const newData=req.body
 
       const writeData = (data) => {
-        fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
+        // fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
+         fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), "utf8");
       };
 
       const readData = () => {
