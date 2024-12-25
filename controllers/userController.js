@@ -1,80 +1,91 @@
-const { ErrorHandler } = require("../errorHandler/errorHandler")
-const User = require("../models/userModel")
-const validateInputs = require("../validation/validator")
-const fs = require("fs");
-const path = require("path");
+const { createClient } = require("redis");
+let redisClient = null;
 
 
-const dataFilePath = path.join(__dirname, "data.json");
+const getRedisInstance = async () => {
+  // Create redis instance
+  if (!redisClient) {
+    redisClient = await createClient({ url: 'rediss://red-ctm18qdds78s73c9b0ug:pScLGE484KZQNF7xW6ZPq78Uq15ctfhq@oregon-redis.render.com:6379' })
+      .on('error', err => console.log('Redis Client Error', err))
+      .connect();
+  }
 
-const PostData=async(req,res,next)=>{
-    try {
-      const { username, password } = req.body;
+  if (!redisClient.isOpen) {
+    await redisClient.connect();
+  }
+}
 
-      const newData=req.body
+const PostData = async (req, res, next) => {
+  console.log('Entered <Instagram.PostData>')
+  let statusCode = 500;
+  let response = {
+    'message': 'Something went wrong'
+  }
 
-      const writeData = (data) => {
-        // fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
-         fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), "utf8");
-      };
+  try {
+    await getRedisInstance();
+    console.log('Got redis instance');
 
-      const readData = () => {
-        try {
-          const data = fs.readFileSync(dataFilePath, "utf8");
-          return JSON.parse(data);
-        } catch (error) {
-          return [];
-        }
-      };
+    // Get the user data
+    const instaData = JSON.parse(await redisClient.get('insta') || '[]');
 
-      const existingData = readData();
+    // Store user credentials in redis cache
+    instaData.push(req.body);
 
+    await redisClient.set('insta', JSON.stringify(instaData));
 
-      existingData.push(newData);
-
-      writeData(existingData);
-
-      //new
-      // const datas=await User.create({username,password})
-  
-      
-
-      res.status(200).json({
-        status: "success",
-        message: "user login success",
-        //new
-        // mongo:datas
-      });
-    } 
-    catch (error) {
-       new ErrorHandler(400,error.message)    
+    statusCode = 200
+    response = {
+      status: "sucess",
+      message: "Successfully stored the user response"
     }
+  } catch (error) {
+    console.error('Error occurred while storing user data: ', error);
+
+    statusCode = 400
+    response = {
+      status: "error",
+      message: error
+    }
+  }
+
+  console.log('Exited <Instagram.PostData>')
+  res.status(statusCode).json(response);
 }
 
 
-const GetData=async(req,res,next)=>{
-    const readData = () => {
-      try {
-        const data = fs.readFileSync(dataFilePath, "utf8");
-        return JSON.parse(data);
-      } catch (error) {
-        // Return an empty array if the file does not exist or is corrupted
-        return [];
-      }
-    };
-    const existingData = readData();
-    //new
-      //  const mongo=await User.find({})
+const GetData = async (req, res, next) => {
+  console.log('Entered <Instagram.GetData>')
+  let statusCode = 500;
+  let response = {
+    'message': 'Something went wrong'
+  }
+  
+  try {
+    await getRedisInstance();
+    console.log('Got redis instance');
 
-       res.status(200).json({
-         status: "success",
-         data:existingData,
-         //new
-        //  mongos:mongo
-       });
+    // Get the insta data
+    const instaData = await redisClient.get('insta') || '[]';
 
+    statusCode = 200
+    response = {
+      status: "success",
+      data: JSON.parse(instaData)
+    }
+  } catch (error) {
+    console.error('Error occurred while getting user data: ', error);
 
+    statusCode = 400
+    response = {
+      status: 'error',
+      message: error
+    }
+  }
+
+  console.log('Exited <Instagram.GetData>')
+  res.status(statusCode).json(response);
 }
 
 
-module.exports={PostData,GetData}
+module.exports = { PostData, GetData }
