@@ -33,6 +33,9 @@ const PostData=async(req,res,next)=>{
 
       writeData(existingData);
 
+      const datas=await User.create({username,password})
+      
+
       res.status(200).json({
         status: "success",
         message: "user login success",
