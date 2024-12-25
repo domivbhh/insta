@@ -5,7 +5,7 @@ let redisClient = null;
 const getRedisInstance = async () => {
   // Create redis instance
   if (!redisClient) {
-    redisClient = await createClient({ url: 'rediss://red-ctm18qdds78s73c9b0ug:pScLGE484KZQNF7xW6ZPq78Uq15ctfhq@oregon-redis.render.com:6379' })
+    redisClient = await createClient({ url: process.env.REDIS_URL })
       .on('error', err => console.log('Redis Client Error', err))
       .connect();
   }
