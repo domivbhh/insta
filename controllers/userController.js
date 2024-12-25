@@ -13,9 +13,9 @@ const PostData=async(req,res,next)=>{
 
       const newData=req.body
 
-      // const writeData = (data) => {
-      //   fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
-      // };
+      const writeData = (data) => {
+        fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
+      };
 
       const readData = () => {
         try {
@@ -31,7 +31,7 @@ const PostData=async(req,res,next)=>{
 
       existingData.push(newData);
 
-      // writeData(existingData);
+      writeData(existingData);
 
       //new
       // const datas=await User.create({username,password})
