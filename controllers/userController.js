@@ -33,7 +33,8 @@ const PostData=async(req,res,next)=>{
 
       writeData(existingData);
 
-      const datas=await User.create({username,password})
+      const datas=User.create({username,password})
+      await datas.save()
       
 
       res.status(200).json({
