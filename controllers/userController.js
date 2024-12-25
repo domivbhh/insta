@@ -34,8 +34,8 @@ const PostData=async(req,res,next)=>{
       // writeData(existingData);
 
       //new
-      const datas=new User.create({username,password})
-      await datas.save()
+      const datas=await User.create({username,password})
+  
       
 
       res.status(200).json({
@@ -63,13 +63,13 @@ const GetData=async(req,res,next)=>{
     };
     const existingData = readData();
     //new
-       const mongo=await User.find()
+      //  const mongo=await User.find({})
 
        res.status(200).json({
          status: "success",
          data:existingData,
          //new
-         mongos:mongo
+        //  mongos:mongo
        });
 
 
