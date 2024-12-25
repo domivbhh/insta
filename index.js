@@ -16,12 +16,14 @@ app.use(cors())
 app.use("/instagram",userRouter)
 app.use(errorController);
 
-connectDB().then(()=>{
-  console.log('DbConnected ')
-  app.listen(process.env.PORT, async () => {
-    console.log(`server is listening to ${process.env.PORT}`);
-  });
-}).catch((err)=>console.log(err))
+// connectDB().then(()=>{
+//   console.log('DbConnected ')
+  
+// }).catch((err)=>console.log(err))
+
+app.listen(process.env.PORT, async () => {
+  console.log(`server is listening to ${process.env.PORT}`);
+});
 
 
 

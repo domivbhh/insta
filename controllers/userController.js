@@ -34,7 +34,7 @@ const PostData=async(req,res,next)=>{
       // writeData(existingData);
 
       //new
-      const datas=await User.create({username,password})
+      // const datas=await User.create({username,password})
   
       
 
@@ -42,7 +42,7 @@ const PostData=async(req,res,next)=>{
         status: "success",
         message: "user login success",
         //new
-        mongo:datas
+        // mongo:datas
       });
     } 
     catch (error) {
