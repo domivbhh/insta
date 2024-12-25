@@ -1,25 +1,19 @@
-const express=require('express')
-const dotenv=require('dotenv')
+const express = require('express')
 const { errorController } = require('./errorHandler/errorHandler')
-const { connectDB } = require('./connectDB')
-// const loginController = require('./controllers/userController')
-const cors=require('cors')
+const cors = require('cors')
 const userRouter = require('./router/userRouter')
 
-const app=express()
-dotenv.config()
-
+const app = express()
 
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+  origin: '*'
+}))
+app.options('*', cors())
 
-app.use("/instagram",userRouter)
+app.use("/instagram", userRouter)
 app.use(errorController);
 
-// connectDB().then(()=>{
-//   console.log('DbConnected ')
-  
-// }).catch((err)=>console.log(err))
 
 app.listen(process.env.PORT, async () => {
   console.log(`server is listening to ${process.env.PORT}`);
